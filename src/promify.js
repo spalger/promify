@@ -1,6 +1,5 @@
 
-const MAYBE = []
-const DEFAULT = []
+const DEFAULT = ()=>{}
 
 export default function (fn, prop = DEFAULT, ...defArgs) {
   let cntx = (fn && prop !== DEFAULT) ? fn : DEFAULT;
