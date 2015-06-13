@@ -1,6 +1,6 @@
 {
   "name": "promify",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simply promisify helper for environments with native Promises",
   "main": "lib/promify.js",
   "scripts": {
