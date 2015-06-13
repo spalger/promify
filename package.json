@@ -2,7 +2,7 @@
   "name": "promify",
   "version": "1.0.0",
   "description": "Simply promisify helper for environments with native Promises",
-  "main": "promify.js",
+  "main": "lib/promify.js",
   "scripts": {
     "test": "mocha -r babel/register src/**/__tests__/**/*.js",
     "compile": "rm -rf lib && babel src/ -d lib/ --ignore './__tests__/*'",
