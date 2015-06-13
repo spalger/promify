@@ -6,26 +6,22 @@ describe('promify helper', function () {
 
   it('transforms a callback expecting function into a promise returning one', function () {
     let i = 'NoN'
-    let obj = {
-      fn(cb) {
-        i = 'NaN'
-        cb()
-      }
+    let fn = function (cb) {
+      i = 'NaN'
+      cb()
     }
 
-    return promify(obj, 'fn')().then(()=> expect(i).to.equal('NaN'))
-  })
-
-  it('accepts a shorter "method syntax"', function () {
-    return promify((cb)=> cb() )()
+    return promify(fn)().then(()=> expect(i).to.equal('NaN'))
   })
 
   describe('context', function () {
-
     it('makes no assumption', function () {
       let cntx
       let obj = {
-        method: promify(function (cb) { cntx = this; cb() })
+        method: promify(function (cb) {
+          cntx = this
+          cb()
+        })
       }
 
       return obj.method().then(()=> {
@@ -33,7 +29,7 @@ describe('promify helper', function () {
       })
     })
 
-    it('unless using method syntax', function () {
+    it('binds properly', function () {
       let cntx
       let obj = {
         method(cb) {
@@ -42,11 +38,10 @@ describe('promify helper', function () {
         }
       }
 
-      return promify(obj, 'method')().then(()=> {
+      return promify(obj.method).bind(obj)().then(()=> {
         expect(cntx).to.equal(obj)
       })
     })
-
   })
 
   describe('argument application', function () {
@@ -67,16 +62,17 @@ describe('promify helper', function () {
       }, 1)(2)
     })
 
-    it('accepts default args in method syntax', function () {
+    it('does not get tripped up by null', function () {
       let obj = {
-        fn(a, b, cb) {
-          expect(a).to.equal(1)
-          expect(b).to.equal(2)
+        fn(a, b, c, cb) {
+          expect(a).to.equal(null)
+          expect(b).to.equal(1)
+          expect(c).to.equal(2)
           cb()
         }
       }
 
-      return promify(obj, 'fn', 1)(2)
+      return promify(obj.fn, null, 1)(2)
     })
   })
 
